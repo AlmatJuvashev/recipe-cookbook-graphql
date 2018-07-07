@@ -10,6 +10,10 @@ import { CustomBtn } from './common';
 
 import AccordionCustomHeaderContentExample from './RecipeList'
 
+
+
+
+
 const GET_ALL_RECIPES = gql`
 {
   allRecipes {
@@ -63,19 +67,22 @@ class HomeComponent extends React.Component<RecipeListProps> {
               <ImageBackground 
                 source={require('../images/brunch-cocktail-5317.jpg')}
                 style={styles.mainContainer}
+                resizeMode='cover'
                 blurRadius={10}>
-                <FlatList
-                  keyExtractor={this.keyExtractor}
-                  data={data ? data.allRecipes : []}
-                  renderItem={({item}) => this.renderItem(item)}
-                />
-                <View style={{flex: 1}}>
-                <CustomBtn 
-                   raised={true}
-                   disabled={false}
-                   name='Create new recipe'
-                   onPress={() => this.navigateToCreatePage(data.allRecipes)}/>
-                </View>
+                <ScrollView style={{flex: 1}}>
+                  <FlatList
+                    keyExtractor={this.keyExtractor}
+                    data={data ? data.allRecipes : []}
+                    renderItem={({item}) => this.renderItem(item)}
+                  />
+                  <View style={{flex: 1}}>
+                  <CustomBtn 
+                    raised={true}
+                    disabled={false}
+                    name='Create new recipe'
+                    onPress={() => this.navigateToCreatePage(data.allRecipes)}/>
+                  </View>
+                </ScrollView>
               </ImageBackground>
             )
           ))
@@ -89,7 +96,13 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     justifyContent: 'center'
+  },
+  imageBackgroundStyle: {
+    flex: 1,
   }
 })
 
 export default HomeComponent;
+
+
+// curl -X POST 'https://api.graph.cool/file/v1/cjj6o7yn93pge0110o567afux' -F "data=@ATC_league of justice.jpeg;filename=atc_officers.png"

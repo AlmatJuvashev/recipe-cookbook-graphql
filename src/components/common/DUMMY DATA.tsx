@@ -6,37 +6,48 @@ import {Button, View, Text, Input, Item, Card, CardItem, Icon } from 'native-bas
 export class InputToArray extends React.Component {
     state = {
         ingredient: '',
+        ingredientObj: {},
         ingredients: []
     }
 
-    addItemToArray = async () => {
+    addItemToArray = () => {
         const ingredientsOld = this.state.ingredients;
-        await this.setState({ingredients: [...ingredientsOld, this.state.ingredient]});
-        this.props.renderItems(this.state.ingredients);
+        const newIngredient = {id: new Date().getTime(), name: this.state.ingredient}
+        
+        this.setState({ingredients: [...ingredientsOld, newIngredient], ingredientObj: newIngredient});
+
+        console.log('SENT ITEM')
+        this.props.renderItems(this.state.ingredientObj);
     }
 
-    deleteListItem = async (i) => {
+    deleteListItem = ({i, id}) => {
+        console.log('INDEX', i);
         const ingredientsOld = this.state.ingredients;
         const newArr = ingredientsOld.filter((item, index) => index !== i);
-        await this.setState({ingredients: [...newArr]});
-        this.props.renderItems(this.state.ingredients);
+        this.setState({ingredients: [...newArr]});
+
+        // Return deleted item
+        const deletedItem = ingredientsOld.filter((item, index) => item.id === id)[0];
+        console.log('INPUT TO ARRAY:::', deletedItem)
+        this.props.deletedItem(deletedItem);
+
     }
 
-    renderRecipeIngredients = () =>{
-        //this.props.renderItems(ingredients);
+    renderRecipeIngredients = (ingredients: any[]) =>{
+        
         return (
-          !!this.state.ingredients && 
+          !!ingredients && 
           (
             <Card transparent> 
-            { this.state.ingredients.map((ingredient, index) => {
+            { ingredients.map((ingredient, index) => {
             return (
                 <CardItem key={index}>
                     <Icon active name="checkmark" />
                     <Text>
-                      {ingredient}
+                      {ingredient.name}
                     </Text>
                     <Button transparent primary 
-                            onPress={() => this.deleteListItem(index)}>
+                            onPress={() => this.deleteListItem({i: index, id: ingredient.id})}>
                              <Icon name="close-circle" active={true}/>
                     </Button>
                 </CardItem>)
@@ -49,6 +60,7 @@ export class InputToArray extends React.Component {
       
     render() {
         const {mainContainer} = styles;
+        console.log('ADDED INGREDIENTS', this.state.ingredients)
         return (
             <View>
                 <View style={mainContainer}>
@@ -56,6 +68,7 @@ export class InputToArray extends React.Component {
                         <Item stackedLabel>
                             <Input 
                                 placeholder={this.props.title}
+                                ref = {component => this._textInput = component}
                                 onChangeText={text => this.setState({ ingredient : text }) }/>
                         </Item>
                     </View>
@@ -66,7 +79,7 @@ export class InputToArray extends React.Component {
                         </Button>
                     </View>
                 </View>
-                    {this.renderRecipeIngredients()}
+                    {this.renderRecipeIngredients(this.state.ingredients)}
             </View>
         )
     }

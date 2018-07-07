@@ -5,6 +5,8 @@ import {Mutation} from 'react-apollo';
 import gql from "graphql-tag";
 import { CustomInput, CustomBtn, InputToArray } from './common';
 import { throwServerError } from 'apollo-link-http-common';
+// import { photoUpload, photoUpload2 } from "./imageManipulation/UploadPhoto";
+import PickImage from './imageManipulation/ImagePicker';
 
 const CREATE_RECIPE = gql`
   mutation addRecipe($title: String!, $description: String!, $ingredients: [String!], $instructions: [String!]) {
@@ -67,20 +69,26 @@ class CreateRecipeComponent extends Component<CreateRecipeFormProps, CreateRecip
     this.props.navigation.navigate('Home', {refetchData: true})
   }
 
-  renderIngredients = (ingredient: string) => {
-    this.setState({ingredientsValue: [...this.state.ingredientsValue, ingredient]})
+  renderIngredients = (ingredients: string[]) => {
+    console.log('ADDED INGREDIENTS:::', ingredients)
+    this.setState({ingredientsValue: [...ingredients]})
   }
 
-  renderInstructions = (instruction: string) => {
-    this.setState({instructionsValue: [...this.state.instructionsValue, instruction]})
+  renderInstructions = (instructions: string[]) => {
+    console.log('ADDED Instructions:::', instructions)
+    this.setState({instructionsValue: [...instructions]})
   }
+
+  // uploadPhotos = () => {
+  //   photoUpload2();
+  // }
 
 
   render() {
     return (
       <Mutation mutation={CREATE_RECIPE}>
         {(createRecipe, {data, loading, error}) => {
-          console.log('DATA:::', data, "ERROR:::", error)
+
           return (
             <ScrollView alwaysBounceVertical={false}>
             <CustomInput 
@@ -91,13 +99,23 @@ class CreateRecipeComponent extends Component<CreateRecipeFormProps, CreateRecip
               value={this.state.descriptionInputValue}        
               label="Enter Description"
               onChangeText={this.addDescription.bind(this)}/>
-            <InputToArray title="Add Ingredients" renderItems={(item) => this.renderIngredients(item)}/>
-            <InputToArray title="Add Instructions" renderItems={(item) => console.log('Instructions::', item)}/>
+            <InputToArray 
+              title="Add Ingredients" 
+              renderItems={(items) => this.renderIngredients(items)}/>
+            <InputToArray 
+              title="Add Instructions" 
+              renderItems={(items) => this.renderInstructions(items)}/>
               <CustomBtn 
                 raised={true}
                 disabled={false}
                 name='Create new recipe'
                 onPress={() => this.createNewRecipe(createRecipe)}/>
+                {/* <CustomBtn 
+                raised={true}
+                disabled={false}
+                name='upload Photo'
+                onPress={() => this.uploadPhotos()}/>
+                <PickImage /> */}
           </ScrollView>
           )
         }}
