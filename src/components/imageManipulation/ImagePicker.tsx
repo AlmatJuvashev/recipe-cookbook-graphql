@@ -1,11 +1,33 @@
 import React from 'react';
-import { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image, PixelRatio } from 'react-native';
+
+import {  Text, StyleSheet, Image, PixelRatio } from 'react-native';
+import glamorous from 'glamorous-native';
 import ImagePicker from 'react-native-image-picker';
-// import { Image } from 'native-base';
+import {photoUpload, photoUploadAxios} from './UploadPhoto';
 
 
-export default class PickImage extends Component {
+const Container = glamorous.view({
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
+const UploadButton = glamorous.touchableOpacity({
+  backgroundColor: 'lightgrey',
+  height: 44,
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
+
+interface PickImageProps {}
+
+interface PickImageState {
+    ImageSource: any;
+}
+
+
+export default class PickImage extends React.Component<PickImageProps, PickImageState> {
  public state = {
     ImageSource: null,
   }
@@ -22,7 +44,6 @@ export default class PickImage extends Component {
       };
 
       ImagePicker.showImagePicker(options, (response) => {
-
         console.log('Response = ', response);
         if(response.didCancel) {
             console.log('User cancelled photo picker');
@@ -34,27 +55,23 @@ export default class PickImage extends Component {
             console.log('User tapped custom button:', response.customButton);
         }
         else {
-            let source = { uri: response.uri };
-
+            ///let source = { uri: response };
+            ///const userObject = this.state.navigation.getParam;
             this.setState({
-                ImageSource: source
-            }, () => console.log('IMAGE SOURCE:::', this.state.ImageSource));
+                ImageSource: response
+            }, () => photoUpload(this.state.ImageSource));
         }      
     });
 }
 
   render() {
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                <View style={styles.ImageContainer}>
+        <Container>
+            <UploadButton onPress={this.selectPhotoTapped.bind(this)}>
                     {this.state.ImageSource === null ? <Text>Select a Photo</Text> :
-                    <Image style={styles.ImageContainer} source={this.state.ImageSource}/>
-                }
-                </View>
-            </TouchableOpacity>
-        </View>
-  
+                    <Image style={styles.ImageContainer} source={this.state.ImageSource}/>}
+            </UploadButton>
+        </Container>
     )
   }
 };
@@ -65,19 +82,18 @@ const styles = StyleSheet.create({
    flex: 1,
    justifyContent: 'center',
    alignItems: 'center',
-   backgroundColor: '#FFF8E1'
+   backgroundColor: '#23147F'
  },
 
  ImageContainer: {
-   borderRadius: 10,
-   width: 250,
-   height: 250,
-   borderColor: '#9B9B9B',
+   borderRadius: 3,
+   width: 100,
+   height: 100,
+   borderColor: '#23147F',
    borderWidth: 1 / PixelRatio.get(),
    justifyContent: 'center',
    alignItems: 'center',
-   backgroundColor: '#CDDC39',
-   
+   backgroundColor: '#23147F', 
  },
 
 });

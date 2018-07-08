@@ -5,12 +5,8 @@ import  RecipeDetailsComponent from './components/RecipeDetails';
 import SignUpComponent from './components/auth/Signup';
 import SignInComponent from './components/auth/Signin';
 
-console.log('SIGN UP', SignUpComponent)
-import { createSignalIfSupported } from 'apollo-link-http-common';
 
-const AppStackNavigator: any;
-
-export default  AppStackNavigator  = new createStackNavigator({
+const AppStackNavigator:any  = new createStackNavigator({
     Home: { screen: HomeComponent},
     CreateRecipe: { screen: CreateRecipeComponent},
     RecipeDetails: {screen: RecipeDetailsComponent},
@@ -29,4 +25,6 @@ export default  AppStackNavigator  = new createStackNavigator({
       }
     }
   })
+
+  export default AppStackNavigator;
   

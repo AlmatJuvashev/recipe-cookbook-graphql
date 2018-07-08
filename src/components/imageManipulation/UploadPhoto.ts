@@ -1,76 +1,58 @@
-import React from 'react';
-import glamorous from 'glamorous-native';
+import axios from 'axios'
+const PHOTO_URL = 'https://api.graph.cool/file/v1/cjj6o7yn93pge0110o567afux';
 
 
-const Container = glamorous.view({
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-})
-
-const UploadButton = glamorous.touchableOpacity({
-  backgroundColor: 'green',
-  height: 44,
-  justifyContent: 'center',
-  alignItems: 'center',
-})
-
-export class ImageLoaderScreen extends React.Component {
-  state = {
-    ImageSource: null,
-  }
-  private handleUploadButtonPress = async () => {
-
-  }
-
-  render() {
-    return (
-      <Container>
-        <UploadButton onPress={this.handleUpladButtonPress}>
-          <Text>Upload File</Text>
-        </UploadButton>
-      </Container>
-    )
-  }
-}
-//import axios  from 'axios';
-
-// export const photoUpload = () => {
-//     let photo = new FormData();
-//     const imageFile = require('../images/brunch-cocktail-5317.jpg')
-
-//     console.log('imageFile: ', imageFile);
-
-//     photo.append('photo', imageFile);  
-//     axios.post('https://api.graph.cool/file/v1/cjj6o7yn93pge0110o567afux', photo, {
-//         headers: {'Content-Type': 'multipart/form-data',}
-//     }).then(response => {
-//         console.log('file upload response',response)
-//     }).catch(error => console.log('ERROR:::', error))
-// };
-
-// //////
-
-
-
-
-
-
-export const photoUpload2 = () => {
-    let photo = new FormData();
-    //const imageFile = require('../images/brunch-cocktail-5317.jpg')
-    photo.append('photo', imageFile);  
-
-    console.log('imageFile: ', {uri: ImageSource});
-
-    fetch('https://api.graph.cool/file/v1/cjj6o7yn93pge0110o567afuxhttps://api.graph.cool/file/v1/cjj6o7yn93pge0110o567afux', {
+export const photoUpload =  async (ImageSource) => {
+    console.log(typeof ImageSource.uri);
+    console.log('Received IMAGE SOURCE:::', ImageSource.uri);
+    console.log('Received IMAGE SOURCE:::', ImageSource.fileName);
+    
+    let data = new FormData();
+    data.append('data', {
+      uri: ImageSource.uri, 
+      name:  'image.png', 
+      type: 'multipart/form-data'});
+      
+    console.log('DATA:::', data);
+    try {
+      const res = await fetch(PHOTO_URL, {
         method: 'POST',
-        body: photo
-      }).then(response => {
-        return response.json()
-      }).then(file => {
-        const fileId = file.id
-      })
+        body: data,
+      });
+      const resJSON = res.json();
+      console.log('RESPONSE', resJSON);
+    } catch (err) {
+      console.log('ERROR:::', err);
+    }
 };
 
+
+export const photoUploadAxios =  (ImageSource) => {
+  console.log(typeof ImageSource.uri);
+    console.log('Received IMAGE SOURCE:::', ImageSource.uri);
+    console.log('Received IMAGE SOURCE:::', ImageSource.fileName);
+    
+    let data = new FormData();
+    data.append('imageFile: ', {
+      uri: ImageSource.uri, 
+      name:  ImageSource.fileName, 
+      size: ImageSource.fileSize,
+      type: 'multipart/form-data'
+    });
+    console.log('DATA:::', data);
+
+  axios({
+    method: 'post',
+    url: PHOTO_URL,
+    name: ImageSource.fileName,
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+    data: ImageSource.uri,
+  }).then(res => {
+    console.log(`This is the GraphCool response ${res}`);
+  }).catch(err => {
+    console.log(`This is the error message ${err.message}`);
+  });
+}
 

@@ -83,7 +83,7 @@ export default class SignInComponent extends Component<SignUpScreenProps, SingUp
           } catch (error) {
             console.log('Couldn\'t set token', error);
           }
-        return this.props.navigation.navigate('Home', {id, email});
+        return this.props.navigation.navigate('Home', {id, email, token });
     }
 
   render() {

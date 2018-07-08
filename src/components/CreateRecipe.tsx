@@ -116,6 +116,7 @@ class CreateRecipeComponent extends Component<CreateRecipeFormProps, CreateRecip
                 name='upload Photo'
                 onPress={() => this.uploadPhotos()}/>
                 <PickImage /> */}
+                <PickImage />
           </ScrollView>
           )
         }}

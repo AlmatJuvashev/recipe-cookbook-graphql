@@ -52,6 +52,7 @@ class HomeComponent extends React.Component<RecipeListProps> {
   }
 
   public render() {
+    //token = this.props.navigation.params('token')
     return (
       <Query query={GET_ALL_RECIPES} >
         {({loading, data, error, refetch}) => {
